@@ -14,6 +14,8 @@ from functools import wraps
 from uuid import UUID, uuid4
 from fastapi.middleware.cors import CORSMiddleware
 from utils import create_access_token, create_refresh_token
+from schemas import Products
+# from database import get_db
 
 # Configuration de l'algorithme de hachage
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -173,9 +175,41 @@ def delete_multiple_users(user_delete: UserDelete, session: Session = Depends(ge
     
     return {"message": f"{len(users)} users deleted successfully"}
 
-# def create_book(db: Session, book: schemas.BookCreate):
-#     db_book = models.Book(title=book.title, author_id=book.author_id, content=book.content)
-#     db.add(db_book)
-#     db.commit()
-#     db.refresh(db_book) 
+@app.get("/")
+def posts():
+    return {"message": "this is working"}
+
+@app.post("/product")
+def create(product: Products,db: Session = Depends(get_session)):
+    new_product = models.Product(**product.dict())
+    db.add(new_product)
+    db.commit()
+    db.refresh(new_product)
+    return new_product
+
+@app.get("/product")
+def get(db: Session = Depends(get_session)):
+    all_products = db.query(models.Product).all()
+    return all_products
+
+@app.delete("/delete/{id}")
+def delete(id:int ,db: Session = Depends(get_session), status_code = status.HTTP_204_NO_CONTENT):
+    delete_post = db.query(models.Product).filter(models.Product.id == id)
+    if delete_post == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"product with such id does not exist")
+    else:
+        delete_post.delete(synchronize_session=False)
+        db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@app.put("/update/{id}")
+def update(id: int, product:Products, db:Session = Depends(get_session)):
+    updated_post = db.query(models.Product).filter(models.Product.id == id)
+    updated_post.first()
+    if updated_post == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'post with such id: {id} does not exist')
+    else:
+        updated_post.update(product.dict(), synchronize_session=False)
+        db.commit()
+    return updated_post.first()
     

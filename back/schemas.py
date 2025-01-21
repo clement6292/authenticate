@@ -27,7 +27,14 @@ class TokenCreate(BaseModel):
     created_date:datetime.datetime
     
 class UserDelete(BaseModel):
-    user_ids: list[UUID]  
+    user_ids: list[UUID]
+    
+    
+class Products(BaseModel):
+    title: str
+    description:str
+    at_sale: bool = False
+    inventory:int
     
 # class BookBase(BaseModel):
 #     title: str

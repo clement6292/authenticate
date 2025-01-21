@@ -1,60 +1,26 @@
-import {
-    Container,
-    CssBaseline,
-    Box,
-    Typography,
-    Button,
-    Grid,
-  } from "@mui/material";
-  import { Link } from "react-router-dom";
-  
-  const Home = () => {
+import { Link } from "react-router-dom";
+
+const Home = () => {
     return (
-      <>
-        <Container maxWidth="lg">
-          <CssBaseline />
-          <Box
-            sx={{
-              mt: 10,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h2" gutterBottom>
-              Welcome to the Home Page!
-            </Typography>
-            <Typography variant="h5" align="center" sx={{ mb: 4 }}>
-              This is your dashboard. Please log in or register to continue.
-            </Typography>
-            
-            <Grid container spacing={2} sx={{ mt: 3 }}>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  component={Link}
-                  to="/login"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mb: 2 }}
-                >
-                  Go to Login
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  component={Link}
-                  to="/register"
-                  fullWidth
-                  variant="outlined"
-                >
-                  Register
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        </Container>
-      </>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <h2 className="text-4xl font-bold mb-4">Bienvenu sur ma Page d'accueil!</h2>
+            <h5 className="text-lg mb-6 text-center">
+            Ceci est votre Page d'accueil. Veuillez vous connecter ou vous inscrire pour continuer.
+            </h5>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg px-4">
+                <Link to="/login" className="w-full">
+                    <button className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700">
+                        Login
+                    </button>
+                </Link>
+                <Link to="/register" className="w-full">
+                    <button className="w-full border border-gray-300 text-gray-700 font-semibold py-2 rounded-lg hover:bg-gray-200">
+                        Register
+                    </button>
+                </Link>
+            </div>
+        </div>
     );
-  };
-  
-  export default Home;
+};
+
+export default Home;

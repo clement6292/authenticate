@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime,Boolean
+from sqlalchemy import Column, Integer, String, DateTime,Boolean,TIMESTAMP,text
 from database import Base
 import datetime
 
@@ -17,12 +17,12 @@ class TokenTable(Base):
     status = Column(Boolean)
     created_date = Column(DateTime, default=datetime.datetime.now) 
     
-# class Book(Base):
-#     __tablename__ = "books"
+class Product(Base):
+    __tablename__ = 'products'
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     title = Column(String(255), index=True)
-#     content = Column(Text, nullable=True) # this field has been added
-#     author_id = Column(Integer, ForeignKey("authors.id"))
-
-#     author = relationship("Author", back_populates="books")
+    id = Column(Integer, primary_key=True, nullable=False)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    at_sale = Column(Boolean, server_default=text('false'))
+    inventory = Column(Integer, server_default=text('0') , nullable=False)
+    added_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('Now()'))
