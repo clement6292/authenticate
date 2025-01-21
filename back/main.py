@@ -9,7 +9,10 @@ from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from auth_bearer import JWTBearer
+from schemas import UserDelete
 from functools import wraps
+from uuid import UUID, uuid4
+from fastapi.middleware.cors import CORSMiddleware
 from utils import create_access_token, create_refresh_token
 
 # Configuration de l'algorithme de hachage
@@ -39,6 +42,22 @@ def get_session():
         session.close()
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000"
+    # "localhost:5173"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 
 @app.post("/register")
 def register_user(user: schemas.UserCreate, session: Session = Depends(get_session)):
@@ -119,11 +138,44 @@ def logout(dependencies=Depends(JWTBearer()), db: Session = Depends(get_session)
         existing_token = db.query(models.TokenTable).where(TokenTable.user_id.in_(info)).delete()
         db.commit()
         
-    existing_token = db.query(models.TokenTable).filter(models.TokenTable.user_id == user_id, models.TokenTable.access_token==token).first()
+    existing_token = db.query(models.TokenTable).filter(models.TokenTable.user_id == user_id, models.TokenTable.access_toke==token).first()
     if existing_token:
         existing_token.status=False
         db.add(existing_token)
         db.commit()
         db.refresh(existing_token)
-    return {"message":"Logout Successfully"} 
+    return {"message":"Logout Successfully"}
+
+
+@app.delete("/users/{user_id}")
+def delete_user(user_id: UUID, session: Session = Depends(get_session)):
+    user = session.query(models.User).filter(models.User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    session.delete(user)
+    session.commit()
+    
+    return {"message": "User deleted successfully"}
+
+
+
+@app.delete("/users/")
+def delete_multiple_users(user_delete: UserDelete, session: Session = Depends(get_session)):
+    users = session.query(models.User).filter(models.User.id.in_(user_delete.user_ids)).all()
+    if not users:
+        raise HTTPException(status_code=404, detail="No users found with the provided IDs")
+    
+    for user in users:
+        session.delete(user)
+    
+    session.commit()
+    
+    return {"message": f"{len(users)} users deleted successfully"}
+
+# def create_book(db: Session, book: schemas.BookCreate):
+#     db_book = models.Book(title=book.title, author_id=book.author_id, content=book.content)
+#     db.add(db_book)
+#     db.commit()
+#     db.refresh(db_book) 
     

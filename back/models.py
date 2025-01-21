@@ -16,3 +16,13 @@ class TokenTable(Base):
     refresh_toke = Column(String(450),nullable=False)
     status = Column(Boolean)
     created_date = Column(DateTime, default=datetime.datetime.now) 
+    
+# class Book(Base):
+#     __tablename__ = "books"
+
+#     id = Column(Integer, primary_key=True, index=True)
+#     title = Column(String(255), index=True)
+#     content = Column(Text, nullable=True) # this field has been added
+#     author_id = Column(Integer, ForeignKey("authors.id"))
+
+#     author = relationship("Author", back_populates="books")

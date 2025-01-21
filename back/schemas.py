@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 import datetime
+from uuid import UUID
 class UserCreate(BaseModel):
     username: str
     email: str
@@ -24,3 +25,12 @@ class TokenCreate(BaseModel):
     refresh_token:str
     status:bool
     created_date:datetime.datetime
+    
+class UserDelete(BaseModel):
+    user_ids: list[UUID]  
+    
+# class BookBase(BaseModel):
+#     title: str
+#     author_id: int
+#     content: Optional[str] = None  # New content field    
+    
