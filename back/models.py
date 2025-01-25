@@ -24,5 +24,6 @@ class Product(Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     at_sale = Column(Boolean, server_default=text('false'))
-    inventory = Column(Integer, server_default=text('0') , nullable=False)
+    inventory = Column(Integer, server_default=text('0'), nullable=False)
     added_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('Now()'))
+    image = Column(String, nullable=True) 

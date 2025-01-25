@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 import datetime
 from uuid import UUID
+
+
 class UserCreate(BaseModel):
     username: str
     email: str
@@ -30,14 +32,14 @@ class UserDelete(BaseModel):
     user_ids: list[UUID]
     
     
+
 class Products(BaseModel):
     title: str
-    description:str
-    at_sale: bool = False
-    inventory:int
-    
-# class BookBase(BaseModel):
-#     title: str
-#     author_id: int
-#     content: Optional[str] = None  # New content field    
+    description: str
+    at_sale: bool
+    inventory: int
+    image: str
+   
+class Config:
+        orm_mode = True    
     

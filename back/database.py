@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 
-DATABASE_URL = "postgresql://postgres:Bright#1270@localhost/authenticate"
+DATABASE_URL = "postgresql://postgres:@localhost/authenticate"
 
 engine = create_engine(DATABASE_URL)
 
